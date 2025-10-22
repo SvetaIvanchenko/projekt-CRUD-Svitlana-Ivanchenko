@@ -18,9 +18,22 @@ db.prepare(`
     genre       TEXT,
     kind        TEXT    NOT NULL CHECK (kind IN ('Film','Serial')),
     rating      REAL    CHECK (rating >= 0 AND rating <= 10),
-    review      TEXT
+    review      TEXT,
+    username    TEXT,
+    review_date TEXT
   )
 `).run();
+
+//  Migracja
+const cols = db.prepare(`PRAGMA table_info(reviews)`).all().map(c => c.name);
+const missing = [];
+if (!cols.includes("username")) missing.push("username TEXT");
+if (!cols.includes("review_date")) missing.push("review_date TEXT");
+if (missing.length) {
+    for (const add of missing) {
+        db.prepare(`ALTER TABLE reviews ADD COLUMN ${add}`).run();
+    }
+}
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -40,16 +53,18 @@ app.get("/api/reviews/:id", (req, res) => {
 });
 
 app.post("/api/reviews", (req, res) => {
-    const { title, year, genre, kind, rating, review } = req.body;
+    const { title, year, genre, kind, rating, review, username, review_date } = req.body;
     if (!title || !kind) return res.status(400).json({ error: "Pola 'title' i 'kind' są obowiązkowe." });
 
     const yr = year ? Number(year) : null;
     const rt = rating !== "" && rating !== undefined ? Number(rating) : null;
+    const usr = safeStr(username);
+    const dt = safeStr(review_date);
 
     const info = db.prepare(`
-    INSERT INTO reviews (title, year, genre, kind, rating, review)
-    VALUES (?, ?, ?, ?, ?, ?)
-  `).run(safeStr(title), yr, safeStr(genre), safeKind(kind), rt, safeStr(review));
+    INSERT INTO reviews (title, year, genre, kind, rating, review, username, review_date)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+  `).run(safeStr(title), yr, safeStr(genre), safeKind(kind), rt, usr, dt, safeStr(review));
 
     const created = db.prepare("SELECT * FROM reviews WHERE id = ?").get(info.lastInsertRowid);
     res.status(201).json(created);
@@ -59,17 +74,19 @@ app.put("/api/reviews/:id", (req, res) => {
     const id = Number(req.params.id);
     if (Number.isNaN(id)) return res.status(400).json({ error: "Nieprawidłowe id." });
 
-    const { title, year, genre, kind, rating, review } = req.body;
+    const { title, year, genre, kind, rating, review, username, review_date } = req.body;
     if (!title || !kind) return res.status(400).json({ error: "Pola 'title' i 'kind' są obowiązkowe." });
 
     const yr = year ? Number(year) : null;
     const rt = rating !== "" && rating !== undefined ? Number(rating) : null;
+    const usr = safeStr(username);
+    const dt = safeStr(review_date);
 
     const info = db.prepare(`
     UPDATE reviews
-       SET title = ?, year = ?, genre = ?, kind = ?, rating = ?, review = ?
+       SET title = ?, year = ?, genre = ?, kind = ?, rating = ?, username = ?, review_date = ?, review = ?
      WHERE id = ?
-  `).run(safeStr(title), yr, safeStr(genre), safeKind(kind), rt, safeStr(review), id);
+  `).run(safeStr(title), yr, safeStr(genre), safeKind(kind), rt, usr, dt, safeStr(review), id);
 
     if (info.changes === 0) return res.status(404).json({ error: "Nie znaleziono." });
 
