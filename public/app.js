@@ -40,8 +40,8 @@ function renderRows(list) {
       <td><span class="badge">${escapeHtml(r.genre ?? "")}</span></td>
       <td>${r.kind}</td>
       <td>${r.rating ?? ""}</td>
-      <td></td>
-      <td></td>
+      <td>${escapeHtml(r.username ?? "")}</td>
+      <td>${r.review_date ?? ""}</td>
       <td class="opinia">${escapeHtml(r.review ?? "")}</td>
       <td class="actions">
         <button class="btn" data-action="edit" data-id="${r.id}" title="Edytuj" aria-label="Edytuj">✏️</button>
@@ -57,6 +57,8 @@ function fillForm(item) {
     $("#genre").value = item.genre ?? "";
     $("#kind").value = item.kind ?? "";
     $("#rating").value = item.rating ?? "";
+    $("#username").value = item.username ?? "";
+    $("#review_date").value = item.review_date ?? "";
     $("#review").value = item.review ?? "";
 
     editId = item.id;
@@ -106,6 +108,8 @@ form.addEventListener("submit", async (e) => {
         genre: $("#genre").value.trim() || null,
         kind: $("#kind").value,
         rating: $("#rating").value !== "" ? Number($("#rating").value) : null,
+        username: $("#username").value.trim() || null,
+        review_date: $("#review_date").value || null,
         review: $("#review").value.trim() || null
     };
 
