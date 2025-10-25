@@ -50,3 +50,6 @@ Walidacja danych: wymagane pola, poprawne typy, kody błędów 400/404
 
 demo konto: Kerrigan Kerrigan 
 
+Adres: https://filmopinie.onrender.com
+
+
