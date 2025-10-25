@@ -1,0 +1,17 @@
+/* === INDEX PAGE Mobile: fixed full-screen background === */
+.index-page {
+  position: relative;
+  background: none !important; /* disable desktop layered bg */
+  isolation: isolate;
+}
+.index-page::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background:
+    linear-gradient(180deg, rgba(26,26,26,.9) 0%, rgba(26,26,26,.65) 50%, rgba(26,26,26,.3) 100%),
+    url('bg2.png') center / cover no-repeat fixed;
+}
+/* Keep content readable */
+.index-page main.container { position: relative; z-index: 1; }

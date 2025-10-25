@@ -1,233 +1,176 @@
-﻿<!doctype html>
+<!DOCTYPE html>
+
 <html lang="pl">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Oceny filmów CRUD</title>
-    <style>
-        :root {
-            --radius: 12px;
-        }
-
-        body {
-            font-family: system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Arial,sans-serif;
-            max-width: 1600px;
-            margin: 40px auto;
-            padding: 0 24px;
-            background: #f7f7fa;
-            color: #222
-        }
-
-        h1 {
-            margin: 0 0 20px
-        }
-
-        form {
-            background: #fff;
-            border: 1px solid #e5e7eb;
-            border-radius: var(--radius);
-            padding: 16px;
-            box-shadow: 0 1px 3px rgba(0,0,0,.06);
-            margin-bottom: 24px
-        }
-
-        .fields {
-            display: flex;
-            gap: 12px;
-            align-items: flex-end;
-            flex-wrap: nowrap
-        }
-
-        .field {
-            flex: 1;
-            min-width: 0
-        }
-
-        label {
-            display: block;
-            font-size: 12px;
-            color: #374151;
-            margin-bottom: 6px
-        }
-
-        input, select, textarea {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #d1d5db;
-            border-radius: 8px;
-            background: #fff;
-            box-sizing: border-box
-        }
-
-        textarea {
-            min-height: 92px;
-            resize: vertical
-        }
-
-        .btn, button, a.btn {
-            appearance: none;
-            border: 0;
-            border-radius: 10px;
-            padding: 10px 14px;
-            background: #111827;
-            color: #fff;
-            cursor: pointer;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            text-decoration: none;
-            height: 40px
-        }
-
-            .btn.secondary {
-                background: #6b7280
-            }
-
-        .actions {
-            display: flex;
-            gap: 8px;
-            justify-content: flex-end
-        }
-
-        .table-wrap {
-            overflow-x: auto
-        }
-
-        table {
-            width: 100%;
-            border-collapse: separate;
-            border-spacing: 0;
-            background: #fff;
-            border: 1px solid #e5e7eb;
-            border-radius: var(--radius);
-            overflow: hidden;
-            font-size: 14px;
-            min-width: 1100px
-        }
-
-        th, td {
-            padding: 12px;
-            border-bottom: 1px solid #eef0f3;
-            vertical-align: top;
-            text-align: left
-        }
-
-        th {
-            background: #f3f4f6;
-            font-weight: 600;
-            white-space: nowrap
-        }
-
-        td, th {
-            white-space: nowrap
-        }
-
-            td.opinia {
-                white-space: normal;
-                word-break: break-word;
-                max-width: 700px
-            }
-
-        tr:last-child td {
-            border-bottom: none
-        }
-
-        .badge {
-            display: inline-block;
-            padding: 2px 8px;
-            border-radius: 999px;
-            background: #eef2ff
-        }
-
-        @media (max-width:1100px) {
-            .fields {
-                flex-direction: column
-            }
-
-            .field {
-                width: 100%
-            }
-        }
-
-        .muted {
-            color: #6b7280;
-            font-size: 12px
-        }
-    </style>
-</head>
-<body>
-    <h1>Oceny filmów według opinii widzów</h1>
-    <p class="muted">Dodaj wpisy poniżej. Aby edytować, kliknij «✏️» w wierszu; formularz zostanie wypełniony danymi.</p>
-
-    <form id="review-form">
-        <input type="hidden" id="editId" value="">
-        <div class="fields">
-            <div class="field">
-                <label>Nazwa</label>
-                <input name="title" id="title" required />
-            </div>
-            <div class="field">
-                <label>Rok produkcji</label>
-                <input name="year" id="year" type="number" min="1888" max="2100" />
-            </div>
-            <div class="field">
-                <label>Rodzaj</label>
-                <input name="genre" id="genre" placeholder="drama, komedia..." />
-            </div>
-            <div class="field">
-                <label>Typ</label>
-                <select name="kind" id="kind" required>
-                    <option value="">— Wybierz —</option>
-                    <option value="Film">Film</option>
-                    <option value="Serial">Serial</option>
-                </select>
-            </div>
-            <div class="field">
-                <label>Ocena (0–10)</label>
-                <input name="rating" id="rating" type="number" step="0.1" min="0" max="10" />
-            </div>
-            <div class="field">
-                <label>Użytkownik</label>
-                <input name="username" id="username" placeholder="Twoje imię" />
-            </div>
-            <div class="field">
-                <label>Data wpisu</label>
-                <input name="review_date" id="review_date" type="date" />
-            </div>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<title>Oceny filmów — Panel</title>
+<link href="/style.css" rel="stylesheet"/>
+<link href="/style-index.css" rel="stylesheet"/><link href="/style-mobile.css" media="screen and (max-width: 768px)" rel="stylesheet"/><link href="/style-index-mobile.css" media="screen and (max-width: 768px)" rel="stylesheet"/></head>
+<body class="index-page">
+<div class="topbar">
+    <div class="container nav">
+        <span class="brand">FILMOPINIE</span>
+        <span class="spacer"></span>
+        <div class="auth-right">
+            <span id="authBar">Zalogowano:  <strong id="userName">—</strong></span>
         </div>
-
-        <div style="margin-top:12px">
-            <label>Opinia</label>
-            <textarea name="review" id="review" placeholder="Twoje zdanie..."></textarea>
-        </div>
-
-        <div style="display:flex;gap:8px;margin-top:12px">
-            <button class="btn" type="submit" id="submitBtn">Dodaj</button>
-            <a href="#" class="btn secondary" id="cancelBtn" style="display:none">Anuluj</a>
-        </div>
-        <p class="muted" id="editHint" style="margin-top:8px;display:none"></p>
-    </form>
-
-    <div class="table-wrap">
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nazwa</th>
-                    <th>Rok</th>
-                    <th>Rodzaj</th>
-                    <th>Typ</th>
-                    <th>Ocena</th>
-                    <th>Użytkownik</th>
-                    <th>Data wpisu</th>
-                    <th>Opinia</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody id="rows"></tbody>
-        </table>
     </div>
+</div>
+<main class="container">
+<header class="top-bar">
+  <div class="container-bar">
+    <div class="brand-spacer"></div>
+    
+  </div>
+</header>
+<div class="title-line container">
+  <h1>Twoje recenzje</h1>
+  <button class="btn-primary" id="backHome" type="button">← Powrót na stronę główną</button>
+</div>
+<section class="card" style="margin-bottom:16px">
+<form autocomplete="off" id="review-form">
+<div class="row">
+<input id="title" placeholder="Tytuł" required=""/>
+<input id="year" max="2100" min="1900" placeholder="Rok" type="number"/>
+<select id="genre" name="genre" required="">
+    <option value="" disabled selected hidden>Gatunek</option>
+<option value="Akcja">Akcja</option>
+<option value="Komedia">Komedia</option>
+<option value="Dramat">Dramat</option>
+<option value="Horror">Horror</option>
+<option value="Sci-Fi">Sci-Fi</option>
+<option value="Fantasy">Fantasy</option>
+<option value="Romans">Romans</option>
+<option value="Thriller">Thriller</option>
+<option value="Animacja">Animacja</option>
+<option value="Dokumentalny">Dokumentalny</option>
+</select>
+<select id="kind">
+    <option value="" disabled selected hidden>Typ</option>
+    <option value="Film">Film</option>
+    <option value="Serial">Serial</option>
+    <option value="Anime">Anime</option>
+</select>
+<input id="rating" max="10" min="0" placeholder="Ocena (0–10)" required="" step="0.1" type="number"/>
+</div>
+<div style="margin-top:8px">
+<textarea id="review" placeholder="Opinia (opcjonalnie)" rows="3" style="width:100%"></textarea>
+</div>
+<div style="margin-top:8px">
+<button type="submit">Dodaj opinię</button>
+</div>
+</form>
+</section>
 
-    <script src="./app.js" defer></script>
+<div class="card" style="margin-bottom:12px">
+<div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap">
+<strong>Filtr:</strong>
+<button id="filterAll" type="button">Wszystkie opinie</button>
+<button id="filterMine" type="button">Moje opinie</button>
+<span id="filterHint" style="opacity:.7"></span>
+<div style="margin-left:auto; display:flex; gap:12px; align-items:center">
+<label style="display:flex;gap:6px;align-items:center"><input id="sortAsc" type="checkbox"/> Data ↑</label>
+<label style="display:flex;gap:6px;align-items:center"><input id="sortDesc" type="checkbox"/> Data ↓</label>
+</div>
+</div>
+</div>
+<div class="card">
+<table>
+<thead>
+<tr>
+<th>Tytuł</th>
+<th>Rok</th>
+<th>Gatunek</th>
+<th>Rodzaj</th>
+<th>Ocena</th>
+<th>Użytkownik</th>
+<th>Data wpisu</th>
+<th>Opinia</th>
+<th></th>
+</tr>
+</thead>
+<tbody id="rows"></tbody>
+</table>
+
+<div class="pagination" id="pagination">
+  <button id="prevPage" type="button" disabled>← Poprzednia</button>
+  <span id="pageInfo">Strona 1</span>
+  <button id="nextPage" type="button">Następna →</button>
+</div>
+</div>
+<script src="/auth.js"></script>
+<script src="/auth-status.js"></script>
+<script defer="" src="/app.js"></script>
+</main>
+
+<footer id="footer">
+  <div class="container">
+    <div>© 2025 FilmOpinie</div>
+    <div><a href="/info.html" id="linkInfo">O nas | Polityka prywatności</a></div>
+  </div>
+</footer>
+<button id="toTop" title="Do góry">↑</button>
+
+
+<!-- === INFO MODAL (O nas + Polityka) === -->
+<div id="info-modal" class="modal hidden" aria-hidden="true" aria-modal="true" role="dialog">
+  <div class="modal-overlay" data-close="true"></div>
+  <div class="modal-content" role="document">
+    <button class="modal-close" id="infoCloseBtn" aria-label="Zamknij">×</button>
+    <div id="infoBody" class="modal-view" style="max-height:70vh; overflow:auto"></div>
+  </div>
+</div>
+
+
+<script>
+(function () {
+  const infoModal = document.getElementById('info-modal');
+  const infoBody  = document.getElementById('infoBody');
+  const infoClose = document.getElementById('infoCloseBtn');
+
+  if (!infoModal || !infoBody || !infoClose) return;
+
+  function openInfoModal(html) {
+    document.body.classList.add('modal-open');
+    infoBody.innerHTML = html;
+    infoModal.classList.remove('hidden');
+    infoModal.setAttribute('aria-hidden', 'false');
+    const h = infoBody.querySelector('h1,h2,h3,[tabindex="-1"]');
+    if (h && h.focus) setTimeout(()=>h.focus(), 30);
+  }
+
+  function closeInfoModal() {
+    document.body.classList.remove('modal-open');
+    infoModal.classList.add('hidden');
+    infoModal.setAttribute('aria-hidden', 'true');
+    infoBody.innerHTML = '';
+  }
+
+  infoModal.querySelector('.modal-overlay')?.addEventListener('click', closeInfoModal);
+  infoClose.addEventListener('click', closeInfoModal);
+  document.addEventListener('keydown', (e)=>{ if (e.key === 'Escape' && !infoModal.classList.contains('hidden')) closeInfoModal(); });
+
+  async function fetchPage(url) {
+    const res = await fetch(url, { credentials: 'omit' });
+    const txt = await res.text();
+    const match = txt.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
+    return match ? match[1] : txt;
+  }
+
+  document.addEventListener('click', async (e) => {
+    const a = e.target.closest('a#linkInfo');
+    if (!a) return;
+    e.preventDefault();
+    try {
+      const html = await fetchPage(a.getAttribute('href'));
+      openInfoModal(html);
+    } catch {
+      location.href = a.href;
+    }
+  });
+})();
+</script>
+
 </body>
 </html>

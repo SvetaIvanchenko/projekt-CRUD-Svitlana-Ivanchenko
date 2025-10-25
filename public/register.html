@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Rejestracja — FilmOpinie</title>
+  
+</head>
+<body>
+  <div class="topbar"><div class="container nav"><a class="brand" href="/home.html">FilmOpinie</a><span class="spacer"></span><a href="/home.html">Strona główna</a></div></div>
+  <main class="container">
+  <h1>Rejestracja</h1>
+  <div class="card"><form id="register-form">
+    <div>
+      <label for="reg-username">Nazwa użytkownika</label>
+      <input id="reg-username" name="username" required />
+    </div>
+    <div>
+      <label for="reg-password">Hasło</label>
+      <input id="reg-password" name="password" type="password" required />
+    </div>
+    <button id="reg-btn" type="submit">Dołącz teraz</button>
+  </form></div>
+  <p>Masz już konto? <a href="/login.html">Zaloguj się</a></p>
+  </main>
+  <script src="/auth.js"></script>
+  <script>setupRegister();</script>
+  </main>
+</body>
+</html>

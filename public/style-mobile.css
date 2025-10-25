@@ -1,0 +1,223 @@
+/* ===============================
+   FilmOpinie — Mobile overrides
+   =============================== */
+
+/* Root sizing */
+html, body {
+    height: 100%;
+    overflow-x: hidden;
+}
+
+body {
+    font-size: 16px;
+    -webkit-text-size-adjust: 100%;
+    background: #0f0f0f;
+}
+
+/* Header hero on mobile */
+.header-hero-wrap {
+    position: relative;
+    min-height: 100vh;
+    background: none !important;
+    isolation: isolate;
+}
+
+    .header-hero-wrap::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        z-index: -1;
+        background: linear-gradient(180deg, rgba(26,26,26,.9) 0%, rgba(26,26,26,.65) 50%, rgba(26,26,26,.3) 100%), url('bg2.png') center / cover no-repeat fixed;
+        will-change: transform;
+    }
+
+/* Topbar / nav */
+.topbar {
+    padding: .75rem 0;
+}
+
+.nav {
+    gap: 1rem;
+}
+
+.links {
+    width: 100%;
+    justify-content: center;
+}
+
+/* Hero area */
+.hero {
+    padding: 2rem 1rem 1rem;
+    text-align: center;
+    align-items: center;
+    max-width: 100%;
+}
+
+    .hero h1 {
+        font-size: 2rem;
+        margin-bottom: .75rem;
+    }
+
+    .hero > p {
+        font-size: 1rem;
+        margin-bottom: 1.25rem;
+    }
+
+/* CTA */
+.cta {
+    justify-content: center;
+    gap: .75rem;
+}
+
+    .cta .link-btn, .cta .btn-primary {
+        padding: .9rem 1.25rem;
+        min-width: 44%;
+    }
+
+/* Searchbar */
+.searchbar {
+    width: 92%;
+    margin: 0 auto 1.75rem;
+    flex-direction: column;
+    gap: .5rem;
+}
+
+    .searchbar input, .searchbar button {
+        width: 100%;
+    }
+
+/* Sections */
+.section {
+    margin: 2.25rem 0;
+}
+
+.section-divider {
+    margin: 1.5rem 0;
+}
+
+/* Cards */
+.cards {
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding: 0 1rem;
+}
+
+.movie-card, .review-card {
+    width: 100%;
+    max-width: 420px;
+}
+
+    .movie-card .thumb {
+        height: 200px;
+    }
+
+/* Steps */
+.steps {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin: 1.25rem 1rem 0;
+}
+
+.step {
+    padding: 1.25rem;
+}
+
+/* Footer */
+#footer .container {
+    flex-direction: column;
+    text-align: center;
+    gap: .5rem;
+}
+
+/* To top button */
+#toTop {
+    bottom: 1rem;
+    right: 1rem;
+    width: 44px;
+    height: 44px;
+    font-size: 1.25rem;
+}
+
+/* Improve tap targets */
+button, .btn, .btn-primary, .link-btn {
+    min-height: 44px;
+}
+
+/* ===============================
+   Home search — mobile layout
+   =============================== */
+@media (max-width: 860px) {
+    #home-search-results thead {
+        display: none;
+    }
+
+    #home-search-results table,
+    #home-search-results tbody,
+    #home-search-results tr,
+    #home-search-results td {
+        display: block;
+        width: 100%;
+    }
+
+        #home-search-results tbody tr {
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 10px 12px;
+            margin: 10px 0;
+            background: var(--bg-card);
+            box-shadow: var(--shadow);
+        }
+
+        #home-search-results tbody td {
+            border: 0;
+            padding: 6px 0;
+        }
+
+            #home-search-results tbody td::before {
+                content: attr(data-th) ": ";
+                font-weight: 600;
+                color: var(--text-secondary);
+            }
+
+    #home-search-results .pagination {
+        padding-left: 0;
+        padding-right: 0;
+    }
+}
+
+/* Column labels (for 6 columns) */
+@media (max-width: 860px) {
+    #home-search-results tbody td:nth-child(1)::before {
+        content: "Tytuł: ";
+    }
+
+    #home-search-results tbody td:nth-child(2)::before {
+        content: "Rok: ";
+    }
+
+    #home-search-results tbody td:nth-child(3)::before {
+        content: "Gatunek: ";
+    }
+
+    #home-search-results tbody td:nth-child(4)::before {
+        content: "Rodzaj: ";
+    }
+
+    #home-search-results tbody td:nth-child(5)::before {
+        content: "Ocena: ";
+    }
+
+    #home-search-results tbody td:nth-child(6)::before {
+        content: "Opinia: ";
+    }
+}
+
+/* Guest notice on mobile */
+#home-search-results .bottom-note {
+    margin: 12px 0 0;
+    text-align: center;
+    font-size: 1rem;
+    color: #fff;
+    opacity: .9;
+}

@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+
+<html lang="pl">
+<head>
+<meta charset="utf-8"/>
+<title>FilmOpinie – strona główna</title>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<link href="/style.css" rel="stylesheet"/>
+<link href="/style-mobile.css" media="screen and (max-width: 768px)" rel="stylesheet"/></head>
+<body class="home-page">
+<div class="header-hero-wrap">
+<!-- GÓRNY PASEK -->
+<div class="topbar">
+<div class="container nav">
+<span class="brand">FILMOPINIE</span>
+<!--<a id="seeAllGuest" class="link-btn primary" href="/login.html" data-auth="show-when-logged-out">Zobacz wszystkie opinie</a>-->
+<div class="links">
+<a href="#new">Najnowsze</a>
+<a href="#how">Jak to działa</a>
+<a class="btn-primary" data-auth="show-when-logged-out" href="/login.html">Zaloguj się</a>
+<a class="btn-primary" data-auth="show-when-logged-out" href="/register.html">Rejestracja</a>
+<button data-auth="show-when-logged-in" id="logoutHome" style="display:none;" type="button">Wyloguj</button>
+</div>
+<span class="spacer"></span>
+</div>
+</div>
+<main class="container">
+<!-- HERO -->
+<section class="hero" id="hero">
+<h1>Odkrywaj, oceniaj i dziel się ulubionymi filmami</h1>
+<p>Prosty katalog z recenzjami społeczności. Przeglądaj publiczne opinie, a po zalogowaniu dodawaj własne.</p>
+<p class="cta">
+<a class="link-btn primary" data-auth="show-when-logged-in" href="/index.html" id="goIndexBtn">Przejdź do recenzji</a>
+<a class="link-btn primary" data-auth="show-when-logged-out" href="/login.html">Przejdź do recenzji</a>
+<a class="link-btn gold" data-auth="show-when-logged-out" href="/register.html">Dołącz teraz</a>
+</p>
+</section>
+<!-- WYSZUKIWARKA (UI, без логики) -->
+<form aria-label="Wyszukiwarka filmów" class="searchbar" onsubmit="return false" role="search">
+<input id="q" placeholder="np. Inception" type="text"/>
+<button class="btn btn-gold" id="searchBtn" type="button">Szukaj</button>
+</form>
+
+<!-- WYNIKI WYSZUKIWANIA (HOME) -->
+<section id="home-search-results" class="section" style="display:none">
+  <div class="section-divider"></div>
+  <h2>Wyniki wyszukiwania</h2>
+  <div class="card">
+    <table>
+      <thead>
+        <tr>
+          <th>Tytuł</th>
+          <th>Rok</th>
+          <th>Gatunek</th>
+          <th>Rodzaj</th>
+          <th>Ocena</th>
+          <th>Opinia</th>
+        </tr>
+      </thead>
+      <tbody id="homeSearchRows"></tbody>
+    </table>
+
+    <div id="homeGuestNotice" class="notice" style="display:none; margin-top:10px; font-weight:600;">
+      Zaloguj się, aby zobaczyć więcej
+    </div>
+
+    <div id="homeEmptyNotice" class="notice" style="display:none; margin-top:10px;">
+      Wygląda na to, że takiego tytułu jeszcze nie ma.
+      Spróbuj wpisać inaczej albo dodaj pierwszą opinię.
+    </div>
+
+    <div class="pagination" id="homeSearchPagination" style="display:none">
+      <button id="homePrevSearchPage" type="button" disabled>← Poprzednia</button>
+      <span id="homeSearchPageInfo">Strona 1</span>
+      <button id="homeNextSearchPage" type="button" disabled>Następna →</button>
+    </div>
+  </div>
+</section>
+
+
+<!-- POPULARNE -->
+<section class="section" id="popular">
+<div class="section-divider"></div>
+<h2>Popularne teraz</h2>
+<div class="cards" id="popular-list">
+<!-- JS wstawi karty filmów tutaj -->
+</div>
+</section>
+<!-- NAJNOWSZE PUBLICZNE OPINIE -->
+<section class="section" id="new">
+<div class="section-divider"></div>
+<h2>Najnowsze publiczne opinie</h2>
+<div class="cards" id="reviews">
+<!-- JS wstawi review-card tutaj -->
+</div>
+<p>
+<a class="link-btn primary" href="/index.html?filter=all" id="seeAllBtn">Zobacz wszystkie opinie</a>
+</p>
+<a class="link-btn primary" data-auth="show-when-logged-out" href="/login.html" id="seeAllGuest">Zobacz wszystkie opinie</a>
+</section>
+<!-- JAK TO DZIAŁA -->
+<section class="section" id="how">
+<div class="section-divider"></div>
+<h2>Jak to działa</h2>
+<div class="steps">
+<div class="step"><strong>Przeglądaj</strong> – krótka lista publicznych opinii jest dostępna bez logowania.</div>
+<div class="step"><strong>Załóż konto</strong> – utwórz login i hasło.</div>
+<div class="step"><strong>Dodaj opinię</strong> – oceń film i zobacz opinie innych!</div>
+</div>
+</section>
+</main>
+</div>
+<!-- LEKKI, JASNY FUTER -->
+<footer id="footer">
+<div class="container">
+<div>© 2025 FilmOpinie</div>
+<div><a href="/info.html" id="linkInfo">O nas | Polityka prywatności</a></div>
+</div>
+</footer>
+<!-- === LOGIN / REGISTER MODAL (Popup) === -->
+<div aria-hidden="true" aria-modal="true" class="modal hidden" id="auth-modal" role="dialog">
+<div class="modal-overlay" data-close="true"></div>
+<div class="modal-content" role="document">
+<button aria-label="Zamknij" class="modal-close" id="modalCloseBtn">×</button>
+<div class="modal-view" id="loginView">
+<h2>Zaloguj się</h2>
+<form id="login-form">
+<input id="login-username" name="username" placeholder="Nazwa użytkownika" required="" type="text"/>
+<input id="login-password" name="password" placeholder="Hasło" required="" type="password"/>
+<button class="btn-primary" type="submit">Zaloguj się</button>
+</form>
+<p style="margin-top:.75rem">Nie masz konta? <a href="#" id="goRegister">Zarejestruj się</a></p>
+</div>
+<div class="modal-view hidden" id="registerView">
+<h2>Rejestracja</h2>
+<form id="register-form">
+<input id="reg-username" name="username" placeholder="Nazwa użytkownika" required="" type="text"/>
+<input id="reg-password" name="password" placeholder="Hasło" required="" type="password"/>
+<button class="btn-primary" type="submit">Dołącz teraz</button>
+</form>
+<p style="margin-top:.75rem">Masz już konto? <a href="#" id="goLogin">Zaloguj się</a></p>
+</div>
+</div>
+</div>
+
+<!-- UI helpers -->
+<button id="toTop" title="Do góry">↑</button>
+<script src="/auth.js"></script>
+<script src="/auth-status.js"></script>
+<script src="/home.js"></script>
+
+<script>
+(function(){
+  const modal = document.getElementById('auth-modal');
+  const closeBtn = document.getElementById('modalCloseBtn');
+  const overlay = modal.querySelector('.modal-overlay');
+  const loginView = document.getElementById('loginView');
+  const registerView = document.getElementById('registerView');
+  const goLogin = document.getElementById('goLogin');
+  const goRegister = document.getElementById('goRegister');
+
+  function openModal(view) {
+    document.body.classList.add('modal-open');
+    modal.classList.remove('hidden');
+    if (view === 'register') { loginView.classList.add('hidden'); registerView.classList.remove('hidden'); }
+    else { registerView.classList.add('hidden'); loginView.classList.remove('hidden'); }
+    modal.setAttribute('aria-hidden', 'false');
+    // focus first input
+    const input = modal.querySelector('.modal-view:not(.hidden) input');
+    if (input) setTimeout(()=>input.focus(), 50);
+  }
+  function closeModal() {
+    document.body.classList.remove('modal-open');
+    modal.classList.add('hidden');
+    modal.setAttribute('aria-hidden', 'true');
+  }
+
+  // Intercept clicks on login/register links visible only for guests
+  document.addEventListener('click', function(e){
+    const a = e.target.closest('a');
+    if(!a) return;
+    const href = a.getAttribute('href') || '';
+    const isGuestLink = a.matches('[data-auth="show-when-logged-out"]');
+    if(isGuestLink && /\/login\.html$/.test(href)) { e.preventDefault(); openModal('login'); }
+    if(isGuestLink && /\/register\.html$/.test(href)) { e.preventDefault(); openModal('register'); }
+  });
+
+  closeBtn.addEventListener('click', closeModal);
+  overlay.addEventListener('click', closeModal);
+  document.addEventListener('keydown', (e)=>{ if(e.key === 'Escape' && !modal.classList.contains('hidden')) closeModal(); });
+
+  if (window.setupLogin)  setupLogin();
+  if (window.setupRegister) setupRegister();
+})();
+</script>
+<!-- === INFO MODAL (O nas + Polityka) === -->
+<div id="info-modal" class="modal hidden" aria-hidden="true" aria-modal="true" role="dialog">
+  <div class="modal-overlay" data-close="true"></div>
+  <div class="modal-content" role="document">
+    <button class="modal-close" id="infoCloseBtn" aria-label="Zamknij">×</button>
+    <div id="infoBody" class="modal-view" style="max-height:70vh; overflow:auto"></div>
+  </div>
+</div>
+
+
+<script>
+(function () {
+  const infoModal = document.getElementById('info-modal');
+  const infoBody  = document.getElementById('infoBody');
+  const infoClose = document.getElementById('infoCloseBtn');
+
+  if (!infoModal || !infoBody || !infoClose) return;
+
+  function openInfoModal(html) {
+    document.body.classList.add('modal-open');
+    infoBody.innerHTML = html;
+    infoModal.classList.remove('hidden');
+    infoModal.setAttribute('aria-hidden', 'false');
+    const h = infoBody.querySelector('h1,h2,h3,[tabindex="-1"]');
+    if (h && h.focus) setTimeout(()=>h.focus(), 30);
+  }
+
+  function closeInfoModal() {
+    document.body.classList.remove('modal-open');
+    infoModal.classList.add('hidden');
+    infoModal.setAttribute('aria-hidden', 'true');
+    infoBody.innerHTML = '';
+  }
+
+  infoModal.querySelector('.modal-overlay')?.addEventListener('click', closeInfoModal);
+  infoClose.addEventListener('click', closeInfoModal);
+  document.addEventListener('keydown', (e)=>{ if (e.key === 'Escape' && !infoModal.classList.contains('hidden')) closeInfoModal(); });
+
+  async function fetchPage(url) {
+    const res = await fetch(url, { credentials: 'omit' });
+    const txt = await res.text();
+    const match = txt.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
+    return match ? match[1] : txt;
+  }
+
+  document.addEventListener('click', async (e) => {
+    const a = e.target.closest('a#linkInfo');
+    if (!a) return;
+    e.preventDefault();
+    try {
+      const html = await fetchPage(a.getAttribute('href'));
+      openInfoModal(html);
+    } catch {
+      location.href = a.href;
+    }
+  });
+})();
+</script>
+
+</body>
+</html>
