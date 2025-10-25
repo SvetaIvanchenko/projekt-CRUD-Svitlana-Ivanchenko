@@ -5,10 +5,13 @@
   "main": "server.js",
   "type": "module",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "dev": "node --watch server.js"
   },
   "dependencies": {
     "express": "^4.19.2",
-    "better-sqlite3": "^9.4.0"
+    "better-sqlite3": "^9.4.0",
+    "express-session": "^1.17.3",
+    "bcrypt": "^5.1.1"
   }
 }

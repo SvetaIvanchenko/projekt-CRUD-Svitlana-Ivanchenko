@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Zaloguj się — FilmOpinie</title>
+  
+</head>
+<body>
+  <div class="topbar"><div class="container nav"><a class="brand" href="/home.html">FilmOpinie</a><span class="spacer"></span><a href="/home.html">Strona główna</a></div></div>
+  <main class="container">
+  <h1>Logowanie</h1>
+  <div class="card"><form id="login-form">
+    <div>
+      <label for="login-username">Nazwa użytkownika</label>
+      <input id="login-username" name="username" required />
+    </div>
+    <div>
+      <label for="login-password">Hasło</label>
+      <input id="login-password" name="password" type="password" required />
+    </div>
+    <button id="login-btn" type="submit">Zaloguj się</button>
+  </form></div>
+  <p>Nie masz konta? <a href="/register.html">Zarejestruj się</a></p>
+  </main>
+  <script src="/auth.js"></script>
+  <script>setupLogin();</script>
+  </main>
+</body>
+</html>

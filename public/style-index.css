@@ -1,0 +1,104 @@
+﻿/* === INDEX PAGE: Cinematic background on desktop (no repeat, scrolls content) === */
+.index-page {
+  /* dark gradient fallback below the image */
+  background:
+    linear-gradient(180deg, rgba(26,26,26,1) 0%, rgba(26,26,26,0.85) 40%, rgba(26,26,26,0.95) 100%);
+  background-attachment: scroll;
+  background-repeat: no-repeat;
+  background-position: center top;
+  background-size: cover;
+}
+.index-page {
+  background-image:
+    url('bg2.png'),
+    linear-gradient(180deg, rgba(26,26,26,1) 0%, rgba(26,26,26,0.85) 40%, rgba(26,26,26,0.95) 100%);
+}
+
+/* Ensure content stays readable over bg */
+.index-page main.container { position: relative; z-index: 1; }
+
+/* Auth bar alignment left */
+.index-page header { justify-content: space-between; }
+.index-page #authBar { text-align: left; align-self: flex-start; }
+
+/* Filter buttons: red & gold instead of blue */
+.index-page #filterAll,
+.index-page #filterMine {
+  padding: .5rem .9rem;
+  border-radius: 999px;
+  border: 0;
+  font-weight: 600;
+  color: #fff;
+  box-shadow: 0 1px 2px rgba(0,0,0,.2);
+}
+.index-page #filterAll { background: var(--accent); }
+.index-page #filterAll:hover { background: var(--accent-hover); }
+
+.index-page #filterMine {
+  background: var(--gold);
+  color: #000;
+}
+.index-page #filterMine:hover {
+  background: #ffed4e;
+}
+
+/* Yellow text contrast: add subtle shadow */
+.rating strong,
+.meta strong,
+.index-page td strong {
+  text-shadow: 0 1px 1px rgba(0,0,0,.6);
+}
+
+/* Keep "to top" button above */
+#index #toTop { z-index: 10; }
+/* ===== Header + title line layout ===== */
+.top-bar .container-bar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  padding: 8px 0;
+}
+.top-bar .auth-right{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+.title-line{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  margin: 8px auto 0 auto;
+}
+/* Chips-like logout button to match screenshot */
+.chip{ padding:.4rem .8rem; border-radius:12px; background:var(--card); border:1px solid rgba(255,255,255,0.12); }
+
+#review-form .row {
+    display: grid;
+    grid-template-columns: 2fr 0.7fr 1fr 1fr 1fr; /* Title | Year | Genre | Kind | Rating */
+    gap: 16px;
+}
+
+    /* чтобы контролы заполняли ячейки полностью */
+    #review-form .row > * {
+        width: 100%;
+        min-width: 0; /* не распирало из-за длинного плейсхолдера */
+    }
+
+#review-form {
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+    #review-form input,
+    #review-form select,
+    #review-form textarea {
+        font: inherit; /* наследуем и семейство, и размер */
+        line-height: 1.2;
+    }
+
+        #review-form input::placeholder,
+        #review-form textarea::placeholder {
+            font: inherit;
+            opacity: .6;
+        }
