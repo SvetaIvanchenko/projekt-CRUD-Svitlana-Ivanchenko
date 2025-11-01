@@ -121,20 +121,31 @@ function validateReviewPayload({ title, year, genre, kind, rating, review }) {
     }
 
     // rating required 0–10
-    const numRating = Number(rating);
-    if (!Number.isFinite(numRating)) {
+    if (rating == null || rating === "") {
+        // brak oceny → błąd REQUIRED
         fieldErrors.push({
             field: "rating",
             code: "REQUIRED",
             message: "Ocena 0–10 jest wymagana"
         });
-    } else if (numRating < 0 || numRating > 10) {
-        fieldErrors.push({
-            field: "rating",
-            code: "OUT_OF_RANGE",
-            message: "Ocena musi być 0–10"
-        });
+    } else {
+        const numRating = Number(rating);
+
+        if (!Number.isFinite(numRating)) {
+            fieldErrors.push({
+                field: "rating",
+                code: "INVALID_FORMAT",
+                message: "Ocena musi być liczbą"
+            });
+        } else if (numRating < 0 || numRating > 10) {
+            fieldErrors.push({
+                field: "rating",
+                code: "OUT_OF_RANGE",
+                message: "Ocena musi być 0–10"
+            });
+        }
     }
+
 
     // year opcjonalny => 1900..currentYear
     if (year != null && year !== "") {
