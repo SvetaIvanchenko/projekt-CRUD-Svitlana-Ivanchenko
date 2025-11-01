@@ -262,6 +262,11 @@ function requireAuthPage(req, res, next) {
 // root -> home.html
 app.get("/", (_, res) => sendFromPublic(res, "home.html"));
 
+// endpoint do smoke test w CI/CD
+app.get("/health", (req, res) => {
+    res.status(200).json({ status: "ok" });
+});
+
 // serwujemy /public oraz katalog główny (dla np. style.css, js)
 app.use(express.static(PUBLIC_DIR, { index: false }));
 app.use(express.static(__dirname, { index: false }));
