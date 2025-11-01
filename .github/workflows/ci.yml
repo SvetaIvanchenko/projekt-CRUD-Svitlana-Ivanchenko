@@ -1,0 +1,53 @@
+name: ci-cd
+
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  build_and_test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Use Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install deps
+        run: npm install
+
+      - name: Run tests
+        run: npm test
+
+    outputs:
+      tests-passed: ${{ steps.run_tests.outcome }}
+
+  deploy_prod:
+    needs: build_and_test
+    runs-on: ubuntu-latest
+    if: ${{ needs.build_and_test.result == 'success' }}
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Deploy to Render/Heroku/etc
+        run: |
+          echo "tu robisz deploy"
+          # przykłady:
+          # heroku container:push web --app $HEROKU_APP
+          # heroku container:release web --app $HEROKU_APP
+          # render API call itp.
+        env:
+          HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+          HEROKU_APP: ${{ secrets.HEROKU_APP }}
+
+      - name: Smoke test /health
+        run: |
+          curl -f "$APP_URL/health"
+        env:
+          APP_URL: ${{ secrets.APP_URL }}
