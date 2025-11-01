@@ -1,176 +1,226 @@
 <!DOCTYPE html>
-
 <html lang="pl">
 <head>
-<meta charset="utf-8"/>
-<meta content="width=device-width,initial-scale=1" name="viewport"/>
-<title>Oceny filmów — Panel</title>
-<link href="/style.css" rel="stylesheet"/>
-<link href="/style-index.css" rel="stylesheet"/><link href="/style-mobile.css" media="screen and (max-width: 768px)" rel="stylesheet"/><link href="/style-index-mobile.css" media="screen and (max-width: 768px)" rel="stylesheet"/></head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width,initial-scale=1" name="viewport" />
+    <title>Oceny filmów — Panel</title>
+    <link href="/style.css" rel="stylesheet" />
+    <link href="/style-index.css" rel="stylesheet" />
+    <link href="/style-mobile.css" media="screen and (max-width: 768px)" rel="stylesheet" />
+    <link href="/style-index-mobile.css" media="screen and (max-width: 768px)" rel="stylesheet" />
+</head>
 <body class="index-page">
-<div class="topbar">
-    <div class="container nav">
-        <span class="brand">FILMOPINIE</span>
-        <span class="spacer"></span>
-        <div class="auth-right">
-            <span id="authBar">Zalogowano:  <strong id="userName">—</strong></span>
+    <div class="topbar">
+        <div class="container nav">
+            <span class="brand">FILMOPINIE</span>
+            <span class="spacer"></span>
+            <div class="auth-right">
+                <span id="authBar">Zalogowano:  <strong id="userName">—</strong></span>
+            </div>
         </div>
     </div>
-</div>
-<main class="container">
-<header class="top-bar">
-  <div class="container-bar">
-    <div class="brand-spacer"></div>
-    
-  </div>
-</header>
-<div class="title-line container">
-  <h1>Twoje recenzje</h1>
-  <button class="btn-primary" id="backHome" type="button">← Powrót na stronę główną</button>
-</div>
-<section class="card" style="margin-bottom:16px">
-<form autocomplete="off" id="review-form">
-<div class="row">
-<input id="title" placeholder="Tytuł" required=""/>
-<input id="year" max="2100" min="1900" placeholder="Rok" type="number"/>
-<select id="genre" name="genre" required="">
-    <option value="" disabled selected hidden>Gatunek</option>
-<option value="Akcja">Akcja</option>
-<option value="Komedia">Komedia</option>
-<option value="Dramat">Dramat</option>
-<option value="Horror">Horror</option>
-<option value="Sci-Fi">Sci-Fi</option>
-<option value="Fantasy">Fantasy</option>
-<option value="Romans">Romans</option>
-<option value="Thriller">Thriller</option>
-<option value="Animacja">Animacja</option>
-<option value="Dokumentalny">Dokumentalny</option>
-</select>
-<select id="kind">
-    <option value="" disabled selected hidden>Typ</option>
-    <option value="Film">Film</option>
-    <option value="Serial">Serial</option>
-    <option value="Anime">Anime</option>
-</select>
-<input id="rating" max="10" min="0" placeholder="Ocena (0–10)" required="" step="0.1" type="number"/>
-</div>
-<div style="margin-top:8px">
-<textarea id="review" placeholder="Opinia (opcjonalnie)" rows="3" style="width:100%"></textarea>
-</div>
-<div style="margin-top:8px">
-<button type="submit">Dodaj opinię</button>
-</div>
-</form>
-</section>
+    <main class="container">
+        <header class="top-bar">
+            <div class="container-bar">
+                <div class="brand-spacer"></div>
+            </div>
+        </header>
 
-<div class="card" style="margin-bottom:12px">
-<div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap">
-<strong>Filtr:</strong>
-<button id="filterAll" type="button">Wszystkie opinie</button>
-<button id="filterMine" type="button">Moje opinie</button>
-<span id="filterHint" style="opacity:.7"></span>
-<div style="margin-left:auto; display:flex; gap:12px; align-items:center">
-<label style="display:flex;gap:6px;align-items:center"><input id="sortAsc" type="checkbox"/> Data ↑</label>
-<label style="display:flex;gap:6px;align-items:center"><input id="sortDesc" type="checkbox"/> Data ↓</label>
-</div>
-</div>
-</div>
-<div class="card">
-<table>
-<thead>
-<tr>
-<th>Tytuł</th>
-<th>Rok</th>
-<th>Gatunek</th>
-<th>Rodzaj</th>
-<th>Ocena</th>
-<th>Użytkownik</th>
-<th>Data wpisu</th>
-<th>Opinia</th>
-<th></th>
-</tr>
-</thead>
-<tbody id="rows"></tbody>
-</table>
+        <div class="title-line container">
+            <h1>Twoje recenzje</h1>
+            <button class="btn-primary" id="backHome" type="button">← Powrót na stronę główną</button>
+        </div>
 
-<div class="pagination" id="pagination">
-  <button id="prevPage" type="button" disabled>← Poprzednia</button>
-  <span id="pageInfo">Strona 1</span>
-  <button id="nextPage" type="button">Następna →</button>
-</div>
-</div>
-<script src="/auth.js"></script>
-<script src="/auth-status.js"></script>
-<script defer="" src="/app.js"></script>
-</main>
+        <section class="card" style="margin-bottom:16px">
+            <form autocomplete="off" id="review-form">
+                <div class="row">
+                    <!-- walidacja HTML5: minlength/maxlength -->
+                    <input id="title"
+                           placeholder="Tytuł"
+                           required
+                           minlength="2"
+                           maxlength="100" />
 
-<footer id="footer">
-  <div class="container">
-    <div>© 2025 FilmOpinie</div>
-    <div><a href="/info.html" id="linkInfo">O nas | Polityka prywatności</a></div>
-  </div>
-</footer>
-<button id="toTop" title="Do góry">↑</button>
+                    <!-- walidacja HTML5: zakres roku -->
+                    <input id="year"
+                           placeholder="Rok"
+                           type="number"
+                           min="1900"
+                           max="2100" />
 
+                    <!-- walidacja HTML5: select required -->
+                    <select id="genre" name="genre" required>
+                        <option value="" disabled selected hidden>Gatunek</option>
+                        <option value="Akcja">Akcja</option>
+                        <option value="Komedia">Komedia</option>
+                        <option value="Dramat">Dramat</option>
+                        <option value="Horror">Horror</option>
+                        <option value="Sci-Fi">Sci-Fi</option>
+                        <option value="Fantasy">Fantasy</option>
+                        <option value="Romans">Romans</option>
+                        <option value="Thriller">Thriller</option>
+                        <option value="Animacja">Animacja</option>
+                        <option value="Dokumentalny">Dokumentalny</option>
+                    </select>
 
-<!-- === INFO MODAL (O nas + Polityka) === -->
-<div id="info-modal" class="modal hidden" aria-hidden="true" aria-modal="true" role="dialog">
-  <div class="modal-overlay" data-close="true"></div>
-  <div class="modal-content" role="document">
-    <button class="modal-close" id="infoCloseBtn" aria-label="Zamknij">×</button>
-    <div id="infoBody" class="modal-view" style="max-height:70vh; overflow:auto"></div>
-  </div>
-</div>
+                    <!-- walidacja HTML5: wymagany typ -->
+                    <select id="kind" required>
+                        <option value="" disabled selected hidden>Typ</option>
+                        <option value="Film">Film</option>
+                        <option value="Serial">Serial</option>
+                        <option value="Anime">Anime</option>
+                    </select>
 
+                    <!-- walidacja HTML5: min/max oceny -->
+                    <input id="rating"
+                           placeholder="Ocena (0–10)"
+                           type="number"
+                           required
+                           min="0"
+                           max="10"
+                           step="0.1" />
+                </div>
 
-<script>
-(function () {
-  const infoModal = document.getElementById('info-modal');
-  const infoBody  = document.getElementById('infoBody');
-  const infoClose = document.getElementById('infoCloseBtn');
+                <div style="margin-top:8px">
+                    <!-- walidacja HTML5: maxlength opinii -->
+                    <textarea id="review"
+                              placeholder="Opinia (opcjonalnie)"
+                              rows="3"
+                              style="width:100%"
+                              maxlength="1000"></textarea>
+                </div>
 
-  if (!infoModal || !infoBody || !infoClose) return;
+                <div style="margin-top:8px">
+                    <button type="submit">Dodaj opinię</button>
+                </div>
+            </form>
+        </section>
 
-  function openInfoModal(html) {
-    document.body.classList.add('modal-open');
-    infoBody.innerHTML = html;
-    infoModal.classList.remove('hidden');
-    infoModal.setAttribute('aria-hidden', 'false');
-    const h = infoBody.querySelector('h1,h2,h3,[tabindex="-1"]');
-    if (h && h.focus) setTimeout(()=>h.focus(), 30);
-  }
+        <div class="card" style="margin-bottom:12px">
+            <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap">
+                <strong>Filtr:</strong>
+                <button id="filterAll" type="button">Wszystkie opinie</button>
+                <button id="filterMine" type="button">Moje opinie</button>
+                <span id="filterHint" style="opacity:.7"></span>
+                <div style="margin-left:auto; display:flex; gap:12px; align-items:center">
+                    <label style="display:flex;gap:6px;align-items:center"><input id="sortAsc" type="checkbox" /> Data ↑</label>
+                    <label style="display:flex;gap:6px;align-items:center"><input id="sortDesc" type="checkbox" /> Data ↓</label>
+                </div>
+            </div>
+        </div>
 
-  function closeInfoModal() {
-    document.body.classList.remove('modal-open');
-    infoModal.classList.add('hidden');
-    infoModal.setAttribute('aria-hidden', 'true');
-    infoBody.innerHTML = '';
-  }
+        <div class="card">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Tytuł</th>
+                        <th>Rok</th>
+                        <th>Gatunek</th>
+                        <th>Rodzaj</th>
+                        <th>Ocena</th>
+                        <th>Użytkownik</th>
+                        <th>Data wpisu</th>
+                        <th>Opinia</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="rows"></tbody>
+            </table>
 
-  infoModal.querySelector('.modal-overlay')?.addEventListener('click', closeInfoModal);
-  infoClose.addEventListener('click', closeInfoModal);
-  document.addEventListener('keydown', (e)=>{ if (e.key === 'Escape' && !infoModal.classList.contains('hidden')) closeInfoModal(); });
+            <div class="pagination" id="pagination">
+                <button id="prevPage" type="button" disabled>← Poprzednia</button>
+                <span id="pageInfo">Strona 1</span>
+                <button id="nextPage" type="button">Następna →</button>
+            </div>
+        </div>
 
-  async function fetchPage(url) {
-    const res = await fetch(url, { credentials: 'omit' });
-    const txt = await res.text();
-    const match = txt.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
-    return match ? match[1] : txt;
-  }
+        <script src="/auth.js"></script>
+        <script src="/auth-status.js"></script>
+        <script defer src="/app.js"></script>
+    </main>
 
-  document.addEventListener('click', async (e) => {
-    const a = e.target.closest('a#linkInfo');
-    if (!a) return;
-    e.preventDefault();
-    try {
-      const html = await fetchPage(a.getAttribute('href'));
-      openInfoModal(html);
-    } catch {
-      location.href = a.href;
-    }
-  });
-})();
-</script>
+    <footer id="footer">
+        <div class="container">
+            <div>© 2025 FilmOpinie</div>
+            <div><a href="/info.html" id="linkInfo">O nas | Polityka prywatności</a></div>
+        </div>
+    </footer>
+
+    <button id="toTop" title="Do góry">↑</button>
+
+    <!-- INFO MODAL -->
+    <div id="info-modal" class="modal hidden" aria-hidden="true" aria-modal="true" role="dialog">
+        <div class="modal-overlay" data-close="true"></div>
+        <div class="modal-content" role="document">
+            <button class="modal-close" id="infoCloseBtn" aria-label="Zamknij">×</button>
+            <div id="infoBody" class="modal-view" style="max-height:70vh; overflow:auto"></div>
+        </div>
+    </div>
+
+    <script>
+        (function () {
+            const infoModal = document.getElementById('info-modal');
+            const infoBody = document.getElementById('infoBody');
+            const infoClose = document.getElementById('infoCloseBtn');
+
+            if (!infoModal || !infoBody || !infoClose) return;
+
+            function openInfoModal(html) {
+                document.body.classList.add('modal-open');
+                infoBody.innerHTML = html;
+                infoModal.classList.remove('hidden');
+                infoModal.setAttribute('aria-hidden', 'false');
+
+                const h = infoBody.querySelector('h1,h2,h3,[tabindex="-1"]');
+                if (h && h.focus) setTimeout(() => h.focus(), 30);
+            }
+
+            function closeInfoModal() {
+                document.body.classList.remove('modal-open');
+                infoModal.classList.add('hidden');
+                infoModal.setAttribute('aria-hidden', 'true');
+                infoBody.innerHTML = '';
+            }
+
+            infoModal.querySelector('.modal-overlay')?.addEventListener('click', closeInfoModal);
+            infoClose.addEventListener('click', closeInfoModal);
+            document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !infoModal.classList.contains('hidden')) closeInfoModal(); });
+
+            async function fetchPage(url) {
+                const res = await fetch(url, { credentials: 'omit' });
+                const txt = await res.text();
+
+                const match = txt.match(/<body[^>]*>([\s\S]*?)<\/body>/i);
+                const bodyHtml = match ? match[1] : txt;
+
+                const temp = document.createElement('div');
+                temp.innerHTML = bodyHtml;
+
+                const header = temp.querySelector('.topbar-auth');
+                if (header) header.remove();
+
+                const card = temp.querySelector('.info-card');
+                if (card) {
+                    return card.outerHTML;
+                }
+
+                return temp.innerHTML;
+            }
+
+            document.addEventListener('click', async (e) => {
+                const a = e.target.closest('a#linkInfo');
+                if (!a) return;
+                e.preventDefault();
+
+                try {
+                    const cleaned = await fetchPage(a.getAttribute('href'));
+                    openInfoModal(cleaned);
+                } catch {
+                    location.href = a.href;
+                }
+            });
+        })();
+    </script>
 
 </body>
 </html>
