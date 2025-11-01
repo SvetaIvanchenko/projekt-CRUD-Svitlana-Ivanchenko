@@ -1,30 +1,76 @@
 <!doctype html>
 <html lang="pl">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Zaloguj się — FilmOpinie</title>
-  
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Zaloguj się — FilmOpinie</title>
+
+    <!-- wspólne zmienne kolorów i layout ogólny -->
+    <link rel="stylesheet" href="/style-auth.css" />
 </head>
-<body>
-  <div class="topbar"><div class="container nav"><a class="brand" href="/home.html">FilmOpinie</a><span class="spacer"></span><a href="/home.html">Strona główna</a></div></div>
-  <main class="container">
-  <h1>Logowanie</h1>
-  <div class="card"><form id="login-form">
-    <div>
-      <label for="login-username">Nazwa użytkownika</label>
-      <input id="login-username" name="username" required />
-    </div>
-    <div>
-      <label for="login-password">Hasło</label>
-      <input id="login-password" name="password" type="password" required />
-    </div>
-    <button id="login-btn" type="submit">Zaloguj się</button>
-  </form></div>
-  <p>Nie masz konta? <a href="/register.html">Zarejestruj się</a></p>
-  </main>
-  <script src="/auth.js"></script>
-  <script>setupLogin();</script>
-  </main>
+<body class="auth-page">
+
+    <!-- ciemny pasek jak na głównej -->
+    <header class="topbar-auth">
+        <div class="topbar-auth-inner">
+            <a class="brand" href="/home.html">FILMOPINIE</a>
+            <a class="basic-link" href="/home.html">Strona główna</a>
+            <div class="topbar-spacer"></div>
+        </div>
+    </header>
+
+    <main class="auth-wrapper">
+        <section class="auth-card">
+            <h1>Zaloguj się</h1>
+            <p class="subtle">Wejdź do panelu i dodawaj własne opinie o filmach i serialach.</p>
+
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="login-username">Nazwa użytkownika</label>
+                    <!-- walidacja HTML5 -->
+                    <input id="login-username"
+                           name="username"
+                           class="form-control"
+                           required
+                           minlength="3"
+                           maxlength="20"
+                           pattern="[A-Za-z0-9_-]+"
+                           placeholder="np. Kerrigan" />
+                </div>
+
+                <div class="form-group">
+                    <label for="login-password">Hasło</label>
+                    <!-- walidacja HTML5 hasła -->
+                    <input id="login-password"
+                           name="password"
+                           class="form-control"
+                           type="password"
+                           required
+                           minlength="4"
+                           maxlength="50"
+                           placeholder="••••••••" />
+                </div>
+
+                <button id="login-btn" type="submit" class="btn-primary-auth">Zaloguj się</button>
+            </form>
+
+            <div class="alt-action">
+                Nie masz konta?
+                <a href="/register.html">Zarejestruj się</a>
+            </div>
+
+            <footer class="auth-footer">
+                © 2025 FilmOpinie
+                <br />
+                <a href="/info.html">O nas | Polityka prywatności</a>
+            </footer>
+        </section>
+    </main>
+
+    <script src="/auth.js"></script>
+    <script>
+        // standardowy flow logowania (po błędzie user-not-found: redirect do /register.html)
+        setupLogin();
+    </script>
 </body>
 </html>

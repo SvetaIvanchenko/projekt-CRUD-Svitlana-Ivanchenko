@@ -1,30 +1,82 @@
 <!doctype html>
 <html lang="pl">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Rejestracja — FilmOpinie</title>
-  
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Rejestracja — FilmOpinie</title>
+
+    <link rel="stylesheet" href="/style-auth.css" />
 </head>
-<body>
-  <div class="topbar"><div class="container nav"><a class="brand" href="/home.html">FilmOpinie</a><span class="spacer"></span><a href="/home.html">Strona główna</a></div></div>
-  <main class="container">
-  <h1>Rejestracja</h1>
-  <div class="card"><form id="register-form">
-    <div>
-      <label for="reg-username">Nazwa użytkownika</label>
-      <input id="reg-username" name="username" required />
-    </div>
-    <div>
-      <label for="reg-password">Hasło</label>
-      <input id="reg-password" name="password" type="password" required />
-    </div>
-    <button id="reg-btn" type="submit">Dołącz teraz</button>
-  </form></div>
-  <p>Masz już konto? <a href="/login.html">Zaloguj się</a></p>
-  </main>
-  <script src="/auth.js"></script>
-  <script>setupRegister();</script>
-  </main>
+<body class="auth-page">
+
+    <header class="topbar-auth">
+        <div class="topbar-auth-inner">
+            <a class="brand" href="/home.html">FILMOPINIE</a>
+            <a class="basic-link" href="/home.html">Strona główna</a>
+            <div class="topbar-spacer"></div>
+        </div>
+    </header>
+
+    <main class="auth-wrapper">
+        <section class="auth-card">
+            <h1>Rejestracja</h1>
+            <p class="subtle">Załóż konto i zacznij dodawać własne recenzje — bez e-maila, tylko login i hasło.</p>
+
+            <form id="register-form">
+                <div class="form-group">
+                    <label for="reg-username">Nazwa użytkownika</label>
+                    <!-- walidacja HTML5 username -->
+                    <input id="reg-username"
+                           name="username"
+                           class="form-control"
+                           required
+                           minlength="3"
+                           maxlength="20"
+                           pattern="[A-Za-z0-9_-]+"
+                           placeholder="np. Kerrigan" />
+                </div>
+
+                <div class="form-group">
+                    <label for="reg-password">Hasło</label>
+                    <!-- walidacja HTML5 hasła -->
+                    <input id="reg-password"
+                           name="password"
+                           class="form-control"
+                           type="password"
+                           required
+                           minlength="4"
+                           maxlength="50"
+                           placeholder="minimum 4 znaki" />
+                </div>
+
+                <button id="reg-btn" type="submit" class="btn-primary-auth">Dołącz teraz</button>
+            </form>
+
+            <div class="alt-action">
+                Masz już konto?
+                <a href="/login.html">Zaloguj się</a>
+            </div>
+
+            <footer class="auth-footer">
+                © 2025 FilmOpinie
+                <br />
+                <a href="/info.html">O nas | Polityka prywatności</a>
+            </footer>
+        </section>
+    </main>
+
+    <script src="/auth.js"></script>
+    <script>
+        setupRegister();
+        // jeżeli weszliśmy tu z login.html przez ?prefill=, wpisz to w pole username
+        (function prefill() {
+            const params = new URLSearchParams(location.search);
+            const u = params.get("prefill");
+            if (u) {
+                const el = document.getElementById("reg-username");
+                if (el) el.value = u;
+            }
+        })();
+    </script>
 </body>
 </html>

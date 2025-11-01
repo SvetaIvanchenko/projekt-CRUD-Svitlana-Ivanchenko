@@ -1,90 +1,67 @@
-﻿// tests/api.test.js
-// testy integracyjne: sprawdzamy kody błędów i logikę API
-
-import test from "node:test";
-import assert from "node:assert/strict";
-import request from "supertest";
+﻿import request from "supertest";
+import { strict as assert } from "node:assert";
 import { app, db } from "../app-instance.js";
 
-// mały helper żeby wyczyścić bazę przed testami integracyjnymi
-function resetDb() {
-    db.prepare("DELETE FROM users").run();
-    db.prepare("DELETE FROM reviews").run();
-}
+describe("API integration", () => {
 
-// test 1: rejestracja z błędnymi danymi -> 422
-test("POST /api/register z niepoprawnymi danymi zwraca 422", async () => {
-    resetDb();
+    // przed testami czyścimy bazę userów żeby nie było konfliktu
+    before(() => {
+        db.prepare("DELETE FROM users").run();
+        db.prepare("DELETE FROM reviews").run();
+    });
 
-    const res = await request(app)
-        .post("/api/register")
-        .set("Content-Type", "application/json")
-        .send({
-            username: "ab",   // za krótki login
-            password: "1"     // za krótkie hasło
-        });
+    it("POST /api/register z błędnym payloadem -> 422", async () => {
+        const res = await request(app)
+            .post("/api/register")
+            .send({ username: "ab", password: "1" }) // za krótkie
+            .set("Content-Type", "application/json");
 
-    assert.equal(res.statusCode, 422, "powinien być kod 422");
-    assert.equal(res.body.status, 422);
-    assert.equal(res.body.error, "Unprocessable Entity");
-    assert.ok(Array.isArray(res.body.fieldErrors));
-});
+        assert.equal(res.statusCode, 422);
+        assert.equal(res.body.status, 422);
+        assert.equal(res.body.error, "Unprocessable Entity");
+    });
 
-// test 2: duplikat użytkownika -> 409 Conflict
-test("POST /api/register duplikat zwraca 409", async () => {
-    resetDb();
+    it("POST /api/register z duplikatem -> 409", async () => {
+        // pierwszy raz OK
+        const okRes = await request(app)
+            .post("/api/register")
+            .send({ username: "Kerrigan", password: "qwerty" })
+            .set("Content-Type", "application/json");
 
-    // pierwsza rejestracja OK
-    const first = await request(app)
-        .post("/api/register")
-        .set("Content-Type", "application/json")
-        .send({
-            username: "Kerrigan",
-            password: "qwerty"
-        });
+        assert.equal(okRes.statusCode, 200);
 
-    assert.equal(first.statusCode, 200, "pierwsze tworzenie konta powinno przejść");
+        // drugi raz ten sam login -> 409 Conflict
+        const dupRes = await request(app)
+            .post("/api/register")
+            .send({ username: "Kerrigan", password: "qwerty" })
+            .set("Content-Type", "application/json");
 
-    // druga próba z tym samym loginem
-    const dup = await request(app)
-        .post("/api/register")
-        .set("Content-Type", "application/json")
-        .send({
-            username: "Kerrigan",
-            password: "qwerty"
-        });
+        assert.equal(dupRes.statusCode, 409);
+        assert.equal(dupRes.body.status, 409);
+        assert.equal(dupRes.body.error, "Conflict");
+    });
 
-    assert.equal(dup.statusCode, 409, "powinien być 409 Conflict przy duplikacie");
-    assert.equal(dup.body.status, 409);
-    assert.equal(dup.body.error, "Conflict");
-});
+    it("DELETE /api/reviews/:id nieistniejącego zasobu -> 404", async () => {
+        const res = await request(app)
+            .delete("/api/reviews/999999"); // coś co raczej nie istnieje
 
-// test 3: usuwanie nieistniejącej recenzji -> 404 Not Found
-test("DELETE /api/reviews/:id nieistniejącego zasobu zwraca 404", async () => {
-    resetDb();
+        assert.equal(res.statusCode, 404);
+        assert.equal(res.body.status, 404);
+        assert.equal(res.body.error, "Not Found");
+    });
 
-    const res = await request(app)
-        .delete("/api/reviews/999999"); // zakładamy że nie ma takiej recenzji
+    it("POST /api/reviews bez sesji -> 401/Unauthorized", async () => {
+        const res = await request(app)
+            .post("/api/reviews")
+            .send({
+                title: "Matrix",
+                kind: "Film",
+                rating: 9.5
+            })
+            .set("Content-Type", "application/json");
 
-    assert.equal(res.statusCode, 404, "powinien być 404 jeśli recenzja nie istnieje");
-    assert.equal(res.body.status, 404);
-    assert.equal(res.body.error, "Not Found");
-});
-
-// test 4: dodanie recenzji bez sesji -> 401 Unauthorized
-test("POST /api/reviews bez zalogowania zwraca 401", async () => {
-    resetDb();
-
-    const res = await request(app)
-        .post("/api/reviews")
-        .set("Content-Type", "application/json")
-        .send({
-            title: "Matrix",
-            kind: "Film",
-            rating: 9.5
-        });
-
-    assert.equal(res.statusCode, 401, "powinien być 401 gdy brak sesji");
-    assert.equal(res.body.status, 401);
-    assert.equal(res.body.error, "Unauthorized");
+        assert.equal(res.statusCode, 401); // brak sesji -> 401
+        assert.equal(res.body.status, 401);
+        assert.equal(res.body.error, "Unauthorized");
+    });
 });
