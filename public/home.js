@@ -233,22 +233,27 @@
     const matchTitle = (r, q) => !q || normalize(r.title || "").includes(normalize(q));
 
     function drawRows(items) {
-        searchRowsBody.innerHTML = items.map(r => {
-            const rating = (r.rating !== null && r.rating !== undefined && r.rating !== "")
-                ? Number(r.rating).toFixed(1)
+        searchRowsBody.innerHTML = items.map(m => {
+            const title = esc(m.Title);
+            const year = esc(m.Year);
+            const type = esc(m.Type);   // movie / series / episode
+            const imdbID = esc(m.imdbID);
+
+            const imdbLink = imdbID
+                ? `<a href="https://www.imdb.com/title/${imdbID}/" target="_blank" rel="noopener noreferrer">Otwórz</a>`
                 : "—";
-            const reviewText = (r.review && r.review.trim()) ? r.review : "—";
+
             return `
         <tr>
-          <td>${esc(r.title ?? "")}</td>
-          <td>${r.year ?? ""}</td>
-          <td>${esc(r.genre ?? "")}</td>
-          <td>${esc(r.kind ?? "")}</td>
-          <td><strong class="num">${esc(rating)}</strong></td>
-          <td class="review-cell">${esc(reviewText)}</td>
+          <td>${title}</td>
+          <td>${year}</td>
+          <td>${type}</td>
+          <td>${imdbID}</td>
+          <td>${imdbLink}</td>
         </tr>`;
         }).join("");
     }
+
 
     function showSection(show) { searchSection.style.display = show ? '' : 'none'; }
     function hideTable() { table.style.display = 'none'; }
@@ -341,16 +346,45 @@
 
     async function run() {
         const q = (qInput.value || '').trim();
-        if (!q) { showSection(false); return; }
-
-        await getMe();
-        const all = await getReviews();
-        matched = all.filter(r => matchTitle(r, q));
+        if (!q) {
+            showSection(false);
+            return;
+        }
 
         showSection(true);
-        if (matched.length === 0) { renderEmpty(); return; }
-        renderResults();
+        hideTable();
+        pagerWrap.style.display = 'none';
+        guestNoticeEl.style.display = 'none';
+        emptyNoticeEl.style.display = 'none';
+        noBgCard(false);
+
+        let data;
+        try {
+            // ТВОЙ backend: GET /api/omdb?q=...
+            const res = await fetch(`/api/omdb?q=${encodeURIComponent(q)}`);
+            data = await res.json();
+        } catch (e) {
+            console.error(e);
+            emptyNoticeEl.textContent = "Błąd połączenia z OMDb.";
+            emptyNoticeEl.style.display = "";
+            return;
+        }
+
+        if (!data || !data.Search || !Array.isArray(data.Search)) {
+            renderEmpty();
+            return;
+        }
+
+        // теперь matched — это СЫРЫЕ объекты OMDb (Title, Year, imdbID, Type, Poster)
+        matched = data.Search;
+
+        showTable();
+        pagerWrap.style.display = 'none';
+        guestNoticeEl.style.display = 'none';
+
+        drawRows(matched);
     }
+
 
     // run only on button click
     qBtn.addEventListener('click', run);
