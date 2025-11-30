@@ -8,6 +8,7 @@ import { fileURLToPath } from "node:url";
 import Database from "better-sqlite3";
 import session from "express-session";
 import bcrypt from "bcrypt";
+import axios from "axios"; 
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -559,8 +560,6 @@ app.post("/api/reviews/:id/edit", requireAuthApi, (req, res) => {
 });
 
 // API: proxy OMDb
-import axios from "axios";
-
 const OMDB_KEY = "8da92fbc";  // <-- сюда вставь свой ключ
 
 app.get("/api/omdb", async (req, res) => {
