@@ -558,25 +558,32 @@ app.post("/api/reviews/:id/edit", requireAuthApi, (req, res) => {
     res.json({ ok: true });
 });
 
-// API: proxy OMDb
-import axios from "axios";
-
-const OMDB_KEY = "8da92fbc";  // <-- сюда вставь свой ключ
+// API: proxy OMDb 
+const OMDB_KEY = "8da92fbc"; 
 
 app.get("/api/omdb", async (req, res) => {
     const q = req.query.q;
-    if (!q) return res.status(400).json({ error: "Missing ?q=" });
+    if (!q) {
+        return res.status(400).json({ error: "Missing ?q=" });
+    }
 
     try {
-        const r = await axios.get("https://www.omdbapi.com/", {
-            params: { apikey: OMDB_KEY, s: q }
-        });
-        res.json(r.data);
+        const url = `https://www.omdbapi.com/?apikey=${OMDB_KEY}&s=${encodeURIComponent(q)}`;
+        const response = await fetch(url); // fetch Node 20
+
+        if (!response.ok) {
+            console.error("OMDb HTTP error", response.status);
+            return res.status(502).json({ error: "OMDb upstream error" });
+        }
+
+        const data = await response.json();
+        res.json(data);
     } catch (e) {
         console.error(e);
         res.status(500).json({ error: "OMDb request failed" });
     }
 });
+
 
 // 404 fallback dla nieistniejących endpointów API i stron
 app.use((req, res) => {
